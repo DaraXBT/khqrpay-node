@@ -1,0 +1,23 @@
+name: CI
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        node: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm install --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Both module formats load
+        run: |
+          node -e "const { KHQRPay, webhooks, VERSION } = require('./dist/cjs/index.cjs'); if (!KHQRPay || !webhooks || VERSION !== '0.1.0') process.exit(1)"
+          node --input-type=module -e "import KHQRPay, { webhooks } from './dist/esm/index.js'; if (!KHQRPay || !webhooks) process.exit(1)"

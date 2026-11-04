@@ -1,0 +1,134 @@
+{
+  "note": "Generated from the KHQRPay server's own signer (HMAC-SHA256 of `${t}.${rawBody}` keyed with the whole whsec_ string as UTF-8). Every SDK must pass every case.",
+  "secret": "whsec_TESTvectors-only_9f3a_b2c1-Xy",
+  "cases": [
+    {
+      "name": "valid",
+      "body": "{\"id\":\"evt_test_1\",\"type\":\"payment.completed\",\"livemode\":false,\"created\":\"2026-11-04T00:00:00.000Z\",\"data\":{\"payment\":{\"id\":\"pay_test_1\",\"status\":\"paid\",\"amount\":\"16.88\",\"currency\":\"USD\",\"reference_id\":\"INV-2048\",\"metadata\":{\"cart_id\":\"c_1\"},\"approved_at\":\"2026-11-04T00:00:00.000Z\"}}}",
+      "header": "t=1793750400,v1=4fd5178309f4eee36edbdbc558eea843521eb389eff36c70953a9338d45b1d2d",
+      "now": 1793750410,
+      "valid": true
+    },
+    {
+      "name": "valid at the edge of the 5-minute tolerance",
+      "body": "{\"id\":\"evt_test_1\",\"type\":\"payment.completed\",\"livemode\":false,\"created\":\"2026-11-04T00:00:00.000Z\",\"data\":{\"payment\":{\"id\":\"pay_test_1\",\"status\":\"paid\",\"amount\":\"16.88\",\"currency\":\"USD\",\"reference_id\":\"INV-2048\",\"metadata\":{\"cart_id\":\"c_1\"},\"approved_at\":\"2026-11-04T00:00:00.000Z\"}}}",
+      "header": "t=1793750400,v1=4fd5178309f4eee36edbdbc558eea843521eb389eff36c70953a9338d45b1d2d",
+      "now": 1793750700,
+      "valid": true
+    },
+    {
+      "name": "timestamp 6 minutes old",
+      "body": "{\"id\":\"evt_test_1\",\"type\":\"payment.completed\",\"livemode\":false,\"created\":\"2026-11-04T00:00:00.000Z\",\"data\":{\"payment\":{\"id\":\"pay_test_1\",\"status\":\"paid\",\"amount\":\"16.88\",\"currency\":\"USD\",\"reference_id\":\"INV-2048\",\"metadata\":{\"cart_id\":\"c_1\"},\"approved_at\":\"2026-11-04T00:00:00.000Z\"}}}",
+      "header": "t=1793750400,v1=4fd5178309f4eee36edbdbc558eea843521eb389eff36c70953a9338d45b1d2d",
+      "now": 1793750760,
+      "valid": false
+    },
+    {
+      "name": "timestamp 6 minutes in the future",
+      "body": "{\"id\":\"evt_test_1\",\"type\":\"payment.completed\",\"livemode\":false,\"created\":\"2026-11-04T00:00:00.000Z\",\"data\":{\"payment\":{\"id\":\"pay_test_1\",\"status\":\"paid\",\"amount\":\"16.88\",\"currency\":\"USD\",\"reference_id\":\"INV-2048\",\"metadata\":{\"cart_id\":\"c_1\"},\"approved_at\":\"2026-11-04T00:00:00.000Z\"}}}",
+      "header": "t=1793750400,v1=4fd5178309f4eee36edbdbc558eea843521eb389eff36c70953a9338d45b1d2d",
+      "now": 1793750040,
+      "valid": false
+    },
+    {
+      "name": "tampered body",
+      "body": "{\"id\":\"evt_test_1\",\"type\":\"payment.completed\",\"livemode\":false,\"created\":\"2026-11-04T00:00:00.000Z\",\"data\":{\"payment\":{\"id\":\"pay_test_1\",\"status\":\"paid\",\"amount\":\"1.00\",\"currency\":\"USD\",\"reference_id\":\"INV-2048\",\"metadata\":{\"cart_id\":\"c_1\"},\"approved_at\":\"2026-11-04T00:00:00.000Z\"}}}",
+      "header": "t=1793750400,v1=4fd5178309f4eee36edbdbc558eea843521eb389eff36c70953a9338d45b1d2d",
+      "now": 1793750410,
+      "valid": false
+    },
+    {
+      "name": "wrong secret",
+      "body": "{\"id\":\"evt_test_1\",\"type\":\"payment.completed\",\"livemode\":false,\"created\":\"2026-11-04T00:00:00.000Z\",\"data\":{\"payment\":{\"id\":\"pay_test_1\",\"status\":\"paid\",\"amount\":\"16.88\",\"currency\":\"USD\",\"reference_id\":\"INV-2048\",\"metadata\":{\"cart_id\":\"c_1\"},\"approved_at\":\"2026-11-04T00:00:00.000Z\"}}}",
+      "header": "t=1793750400,v1=4fd5178309f4eee36edbdbc558eea843521eb389eff36c70953a9338d45b1d2d",
+      "now": 1793750410,
+      "valid": false,
+      "secret": "whsec_other"
+    },
+    {
+      "name": "missing header",
+      "body": "{\"id\":\"evt_test_1\",\"type\":\"payment.completed\",\"livemode\":false,\"created\":\"2026-11-04T00:00:00.000Z\",\"data\":{\"payment\":{\"id\":\"pay_test_1\",\"status\":\"paid\",\"amount\":\"16.88\",\"currency\":\"USD\",\"reference_id\":\"INV-2048\",\"metadata\":{\"cart_id\":\"c_1\"},\"approved_at\":\"2026-11-04T00:00:00.000Z\"}}}",
+      "header": "",
+      "now": 1793750410,
+      "valid": false
+    },
+    {
+      "name": "malformed header",
+      "body": "{\"id\":\"evt_test_1\",\"type\":\"payment.completed\",\"livemode\":false,\"created\":\"2026-11-04T00:00:00.000Z\",\"data\":{\"payment\":{\"id\":\"pay_test_1\",\"status\":\"paid\",\"amount\":\"16.88\",\"currency\":\"USD\",\"reference_id\":\"INV-2048\",\"metadata\":{\"cart_id\":\"c_1\"},\"approved_at\":\"2026-11-04T00:00:00.000Z\"}}}",
+      "header": "garbage",
+      "now": 1793750410,
+      "valid": false
+    },
+    {
+      "name": "no v1",
+      "body": "{\"id\":\"evt_test_1\",\"type\":\"payment.completed\",\"livemode\":false,\"created\":\"2026-11-04T00:00:00.000Z\",\"data\":{\"payment\":{\"id\":\"pay_test_1\",\"status\":\"paid\",\"amount\":\"16.88\",\"currency\":\"USD\",\"reference_id\":\"INV-2048\",\"metadata\":{\"cart_id\":\"c_1\"},\"approved_at\":\"2026-11-04T00:00:00.000Z\"}}}",
+      "header": "t=1793750400",
+      "now": 1793750410,
+      "valid": false
+    },
+    {
+      "name": "non-hex v1",
+      "body": "{\"id\":\"evt_test_1\",\"type\":\"payment.completed\",\"livemode\":false,\"created\":\"2026-11-04T00:00:00.000Z\",\"data\":{\"payment\":{\"id\":\"pay_test_1\",\"status\":\"paid\",\"amount\":\"16.88\",\"currency\":\"USD\",\"reference_id\":\"INV-2048\",\"metadata\":{\"cart_id\":\"c_1\"},\"approved_at\":\"2026-11-04T00:00:00.000Z\"}}}",
+      "header": "t=1793750400,v1=zzd5178309f4eee36edbdbc558eea843521eb389eff36c70953a9338d45b1d2d",
+      "now": 1793750410,
+      "valid": false
+    },
+    {
+      "name": "short v1",
+      "body": "{\"id\":\"evt_test_1\",\"type\":\"payment.completed\",\"livemode\":false,\"created\":\"2026-11-04T00:00:00.000Z\",\"data\":{\"payment\":{\"id\":\"pay_test_1\",\"status\":\"paid\",\"amount\":\"16.88\",\"currency\":\"USD\",\"reference_id\":\"INV-2048\",\"metadata\":{\"cart_id\":\"c_1\"},\"approved_at\":\"2026-11-04T00:00:00.000Z\"}}}",
+      "header": "t=1793750400,v1=4fd5178309f4eee36edb",
+      "now": 1793750410,
+      "valid": false
+    },
+    {
+      "name": "unicode body",
+      "body": "{\"id\":\"evt_km\",\"note\":\"ការទូទាត់ ✓\"}",
+      "header": "t=1793750400,v1=e282dfa0a885e031b042eaf851be1a6cddf8efda16eca19f36839480eba97892",
+      "now": 1793750400,
+      "valid": true
+    }
+  ],
+  "createRequest": {
+    "method": "POST",
+    "path": "/v1/payments",
+    "body": {
+      "amount": "16.88",
+      "currency": "USD",
+      "reference_id": "INV-2048",
+      "metadata": {
+        "cart_id": "c_1"
+      }
+    }
+  },
+  "paymentResponse": {
+    "id": "pFQ3xV8aN2rL7kTm9sB4cWd6hJ1yZ0eU",
+    "object": "payment",
+    "livemode": true,
+    "status": "pending",
+    "amount": "16.88",
+    "currency": "USD",
+    "requested_amount": "16.88",
+    "requested_currency": "USD",
+    "settlement_amount": "16.88",
+    "settlement_currency": "USD",
+    "conversion_rate": null,
+    "reference_id": "INV-2048",
+    "metadata": {
+      "cart_id": "cart_7Hq2",
+      "customer": "Sokha"
+    },
+    "qr_string": "000201010212…630494E5",
+    "checkout_url": "https://khqrpay.dev/pay/pFQ3xV8aN2rL7kTm9sB4cWd6hJ1yZ0eU",
+    "approved_at": null,
+    "scanned_at": null,
+    "created_at": "2026-10-23T02:14:09.000Z",
+    "expires_at": "2026-10-23T02:17:09.000Z"
+  },
+  "errorResponse": {
+    "status": 400,
+    "body": {
+      "error": "invalid_request",
+      "message": "amount is required"
+    }
+  }
+}

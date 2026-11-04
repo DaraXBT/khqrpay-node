@@ -1,7 +1,7 @@
 // KHQRPay for Node.js: the official SDK for the KHQRPay API (https://khqrpay.dev/docs).
 import { webcrypto, createHmac, timingSafeEqual } from "node:crypto";
 
-export const VERSION = "0.1.0";
+export const VERSION = "0.1.1";
 const DEFAULT_BASE_URL = "https://khqrpay.dev";
 
 export type Currency = "USD" | "KHR";
@@ -213,7 +213,13 @@ export class KHQRPay {
     } catch (error) {
       throw new KHQRPayError("network_error", `Couldn’t reach KHQRPay: ${error instanceof Error ? error.message : String(error)}`);
     }
-    const text = await res.text();
+    let text: string;
+    try {
+      text = await res.text();
+    } catch (error) {
+      // The connection dropped part-way through the answer.
+      throw new KHQRPayError("network_error", `Couldn’t read KHQRPay’s answer: ${error instanceof Error ? error.message : String(error)}`, res.status);
+    }
     let json: unknown;
     try {
       json = text ? JSON.parse(text) : null;

@@ -36,7 +36,7 @@ describe("the API client", () => {
     expect(calls[0].url).toBe("https://khqrpay.dev/v1/payments");
     expect(calls[0].init.method).toBe("POST");
     expect(JSON.parse(String(calls[0].init.body))).toEqual(vectors.createRequest.body);
-    expect(h(calls[0])).toMatchObject({ Authorization: "Bearer kp_test_abc", "Content-Type": "application/json", "User-Agent": "khqrpay-node/0.1.0" });
+    expect(h(calls[0])).toMatchObject({ Authorization: "Bearer kp_test_abc", "Content-Type": "application/json", "User-Agent": "khqrpay-node/0.1.1" });
     expect(h(calls[0])["Idempotency-Key"]).toMatch(/^[0-9a-f-]{36}$/);
   });
 
@@ -67,6 +67,12 @@ describe("the API client", () => {
   it("reports a transport failure as network_error", async () => {
     const f = (async () => { throw new TypeError("fetch failed"); }) as unknown as typeof fetch;
     await expect(new KHQRPay("kp_test_abc", { fetch: f }).usage.retrieve()).rejects.toMatchObject({ code: "network_error", status: 0 });
+  });
+
+  it("reports a connection that drops mid-answer as network_error", async () => {
+    const broken = new ReadableStream({ start(controller) { controller.error(new TypeError("terminated")); } });
+    const f = (async () => new Response(broken, { status: 200 })) as unknown as typeof fetch;
+    await expect(new KHQRPay("kp_test_abc", { fetch: f }).usage.retrieve()).rejects.toMatchObject({ code: "network_error" });
   });
 
   it("builds list queries without unset parameters, and encodes ids", async () => {

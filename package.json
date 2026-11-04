@@ -1,6 +1,6 @@
 {
   "name": "khqrpay",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Official KHQRPay SDK for Node.js: accept KHQR payments in Cambodia from ABA, ACLEDA, Wing and every Bakong app, and verify signed webhooks.",
   "keywords": [
     "khqr",

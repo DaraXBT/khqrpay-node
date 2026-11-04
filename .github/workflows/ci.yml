@@ -19,5 +19,5 @@ jobs:
       - run: npm run build
       - name: Both module formats load
         run: |
-          node -e "const { KHQRPay, webhooks, VERSION } = require('./dist/cjs/index.cjs'); if (!KHQRPay || !webhooks || VERSION !== '0.1.0') process.exit(1)"
+          node -e "const { KHQRPay, webhooks, VERSION } = require('./dist/cjs/index.cjs'); if (!KHQRPay || !webhooks || VERSION !== '0.1.1') process.exit(1)"
           node --input-type=module -e "import KHQRPay, { webhooks } from './dist/esm/index.js'; if (!KHQRPay || !webhooks) process.exit(1)"

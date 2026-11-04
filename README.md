@@ -6,7 +6,7 @@ Accept KHQR payments from ABA, ACLEDA, Wing and every Bakong app in your Node.js
 - API docs: [khqrpay.dev/docs](https://khqrpay.dev/docs)
 - Guide: [KHQR payments with Node.js and Next.js](https://khqrpay.dev/guides/khqr-api-nodejs)
 
-No dependencies. Node 18 or later, ESM and CommonJS, with TypeScript types.
+No dependencies. Node 18 or later, ESM and CommonJS, with TypeScript types. With `require`, take the class by name: `const { KHQRPay, webhooks } = require("khqrpay");`.
 
 ## Install
 
